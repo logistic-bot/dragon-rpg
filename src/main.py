@@ -10,6 +10,8 @@ class AppWindow(Gtk.Window):
 		self.set_title("Dragon RPG") # TODO: Find better title
 		self.connect("delete-event", Gtk.main_quit)
 
-w = AppWindow()
-w.show_all()
-Gtk.main()
+
+if __name__ == "__main__":
+	app = AppWindow()
+	app.show_all()
+	Gtk.main()
