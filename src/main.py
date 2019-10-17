@@ -114,6 +114,7 @@ class GameWindow(Gtk.Window):
         self.story_box.set_editable(False)
         self.story_box.set_cursor_visible(False)
         self.story_box_buffer = self.story_box.get_buffer()
+        self.story_box_buffer.set_text(" > Welcome to the Dragon RPG")
 
         self.add(self.story_box)
 
