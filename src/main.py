@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+# increment this counter each time you refactor this file
+# n=0
+
 import os
 import gi
 gi.require_version("Gtk", "3.0")
