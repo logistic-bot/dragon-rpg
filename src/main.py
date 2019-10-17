@@ -123,12 +123,17 @@ class GameWindow(Gtk.Window):
 
         self.add(self.layout)
 
+        self.chapter_1()
+
     def on_game_closed(self, *args): # *args is ignored but necessary because for some reason, in __init__ the self.connect gives 3 args to on_game_closed, don't know why...
         Gtk.main_quit()
 
     def advance_story(self, message):
         end_iter = self.story_box_buffer.get_end_iter()
-        self.story_box_buffer.insert(end_iter, " > " + message)
+        self.story_box_buffer.insert(end_iter, " > " + message + ".\n")
+
+    def chapter_1(self):
+        self.advance_story("Welcome to chapter 1")
 
 if __name__ == "__main__":
     app = StartScreen()
