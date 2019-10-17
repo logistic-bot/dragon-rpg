@@ -116,7 +116,10 @@ class GameWindow(Gtk.Window):
         self.story_box_buffer = self.story_box.get_buffer()
         self.story_box_buffer.set_text(" > Welcome to the Dragon RPG")
 
-        self.add(self.story_box)
+        self.layout = Gtk.Grid()
+        self.layout.add(self.story_box, 0, 0, 1, 1)
+
+        self.add(self.layout)
 
     def on_game_closed(self, *args): # *args is ignored but necessary because for some reason, in __init__ the self.connect gives 3 args to on_game_closed, don't know why...
         Gtk.main_quit()
