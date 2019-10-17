@@ -8,6 +8,27 @@ import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 
+class StartScreen(Gtk.Window):
+    def __init__(self):
+        super().__init__()
+        self.set_title("Dragon RPG")  # TODO: Find better title
+        self.connect("delete-event", Gtk.main_quit)
+        self.set_border_width(10)
+
+        self.layout = Gtk.Box()
+
+        self.new_game_button = Gtk.Button(label="New Game")
+        self.new_game_button.connect("clicked", self.create_new_game)
+
+        self.layout.pack_start(self.new_game_button, True, True, 0)
+
+        self.add(self.layout)
+
+    def create_new_game(self, button):
+        window = NewGameWindow()
+        window.show_all()
+        self.destroy()
+
 class NewGameWindow(Gtk.Window):
     def __init__(self):
         super().__init__()
@@ -53,6 +74,9 @@ class NewGameWindow(Gtk.Window):
             with open(os.path.abspath("./saves/{}.json".format(save_name)), "w+"):
                 pass # only create the file
 
+        window = GameWindow()
+        window.show_all()
+        self.destroy()
 
     def confirm_overide_save(self, save_name):
         confirm_dialog = ConfirmOverwriteDialog(self, save_name)
@@ -65,7 +89,6 @@ class NewGameWindow(Gtk.Window):
             return False # Do not overwrite
         else:
             raise Exception("Can't handle unkown dialog reponse " + response)
-
 
 class ConfirmOverwriteDialog(Gtk.Dialog):
     def __init__(self, parent, save_name):
@@ -80,28 +103,22 @@ class ConfirmOverwriteDialog(Gtk.Dialog):
         box.add(label)
         self.show_all()
 
-
-class StartScreen(Gtk.Window):
+class GameWindow(Gtk.Window):
     def __init__(self):
         super().__init__()
-        self.set_title("Dragon RPG")  # TODO: Find better title
-        self.connect("delete-event", Gtk.main_quit)
+        self.set_title("Dragon RPG")
+        self.connect("delete-event", self.on_game_closed)
         self.set_border_width(10)
 
-        self.layout = Gtk.Box()
+        self.story_box = Gtk.TextView()
+        self.story_box.set_editable(False)
+        self.story_box.set_cursor_visible(False)
+        self.story_box_buffer = self.story_box.get_buffer
 
-        self.new_game_button = Gtk.Button(label="New Game")
-        self.new_game_button.connect("clicked", self.create_new_game)
+        self.add(self.story_box)
 
-        self.layout.pack_start(self.new_game_button, True, True, 0)
-
-        self.add(self.layout)
-
-    def create_new_game(self, button):
-        window = NewGameWindow()
-        window.show_all()
-        self.destroy()
-
+    def on_game_closed(self, *args): # *args is ignored but necessary because for some reason, in __init__ the self.connect gives 3 args to on_game_closed, don't know why...
+        Gtk.main_quit()
 
 if __name__ == "__main__":
     app = StartScreen()
