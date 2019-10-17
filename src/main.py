@@ -117,6 +117,8 @@ class GameWindow(Gtk.Window):
         self.advance_story("Welcome to the Dragon RPG")
 
         self.layout = Gtk.Grid()
+        self.layout.set_row_homogeneous(True)
+        self.layout.set_column_homogeneous(True)
         self.layout.attach(self.story_box, 0, 0, 1, 1)
 
         self.add(self.layout)
