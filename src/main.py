@@ -47,9 +47,8 @@ class NewGameWindow(Gtk.Window):
             do_owerwrite = self.confirm_overide_save(save_name)
 
         if do_owerwrite:
-            with open("./saves/{}.json".format(save_namee), "w"):
+            with open(os.path.abspath("./saves/{}.json".format(save_name)), "w+"):
                 pass # only create the file
-                # TODO: Write initial data
 
 
     def confirm_overide_save(self, save_name):
