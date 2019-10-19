@@ -128,9 +128,17 @@ class GameWindow(Gtk.Window):
     def on_game_closed(self, *args): # *args is ignored but necessary because for some reason, in __init__ the self.connect gives 3 args to on_game_closed, don't know why...
         Gtk.main_quit()
 
-    def advance_story(self, message):
+    def advance_story(self, message, saying_to_self=False, clear=False, tutorial=False):
         end_iter = self.story_box_buffer.get_end_iter()
-        self.story_box_buffer.insert(end_iter, " > " + message + ".\n")
+
+        if saying_to_self:
+            self.story_box_buffer.insert(end_iter, "\t\t\t«" + message + "...»\n")
+        elif clear:
+            self.story_box_buffer.insert(end_iter, "\t\t" + message + "\n")
+        elif tutorial:
+            self.story_box_buffer.insert(end_iter, "[Tutorial]\t" + message + ".\n")
+        else:
+            self.story_box_buffer.insert(end_iter, " > " + message + ".\n")
 
     def chapter_1(self):
         self.advance_story("Chapter 1: The beginning")
