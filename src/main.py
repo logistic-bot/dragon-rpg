@@ -7,6 +7,7 @@ import os
 import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
+from time import sleep
 
 class StartScreen(Gtk.Window):
     def __init__(self):
@@ -115,6 +116,7 @@ class GameWindow(Gtk.Window):
         self.story_box.set_cursor_visible(False)
         self.story_box_buffer = self.story_box.get_buffer()
         self.advance_story("Welcome to the Dragon RPG")
+        # TODO: Find a way to make the text wrap when there is not enough space in the window
 
         self.layout = Gtk.Grid()
         self.layout.set_row_homogeneous(True)
@@ -142,6 +144,12 @@ class GameWindow(Gtk.Window):
 
     def chapter_1(self):
         self.advance_story("Chapter 1: The beginning")
+        self.advance_story("Well, here I am", True)
+#        sleep(1)
+        self.advance_story("\t...", clear=True)
+#        sleep(1)
+        self.advance_story("As you may have guessed, you are a Dragon", tutorial=True)
+        self.advance_story("In this world, Dragons are very respected, and are living in the same towns as humans, although not always very peacefully..", tutorial=True)
 
 if __name__ == "__main__":
     app = StartScreen()
