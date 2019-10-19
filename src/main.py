@@ -133,7 +133,7 @@ class GameWindow(Gtk.Window):
         self.story_box_buffer.insert(end_iter, " > " + message + ".\n")
 
     def chapter_1(self):
-        self.advance_story("Welcome to chapter 1")
+        self.advance_story("Chapter 1: The beginning")
 
 if __name__ == "__main__":
     app = StartScreen()
