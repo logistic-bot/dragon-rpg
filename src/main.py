@@ -3,13 +3,27 @@
 # increment this counter each time you refactor this file
 # n=0
 
+"""
+This is the main (and currently the only) file of this project.
+E V E R Y T H I N G  is happening in this file, from initialisation to running,
+to error handeling.
+TODO: Add explanation about how each class in this file is interacting with the
+others.
+"""
+
 import os
 import gi
 gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk
-from time import sleep
+from gi.repository import Gtk # TODO: find a way so pylint inglores C0413 on this line
 
 class StartScreen(Gtk.Window):
+    """
+    This window is shown when the app starts up.
+    It will contains buttons to load a game, create a new game, and possibly others.
+
+    At the momment, it only contains a "New Game" button, and when clicked
+    spawns a "NewGameWindow" Windows
+    """
     def __init__(self):
         super().__init__()
         self.set_title("Dragon RPG")  # TODO: Find better title
@@ -26,11 +40,21 @@ class StartScreen(Gtk.Window):
         self.add(self.layout)
 
     def create_new_game(self, button):
+        """
+        This method opens a NewGameWindow and destroys itself.
+        it is used to create new game
+        """
+        button.set_label("Please wait...")
         window = NewGameWindow()
         window.show_all()
         self.destroy()
 
 class NewGameWindow(Gtk.Window):
+    """
+    This window is spawned by StartScreen and allows the user to create a new game.
+    It uses ConfirmOverwriteDialog if the user is about to overwrite a save, and
+    spawns GameWindow to allow the user to start playing
+    """
     def __init__(self):
         super().__init__()
         self.set_title("New game")
@@ -63,6 +87,11 @@ class NewGameWindow(Gtk.Window):
         self.add(self.layout)
 
     def create_new_game(self, button, entry):
+        """
+        This method creates the game file, using ConfirmOverwriteDialog if the
+        user attemts to overwrite a saved game
+        """
+        button.set_label("Please wait...")
         save_name = entry.get_text()
         exists = os.path.isfile("./saves/{}.json".format(save_name))
 
@@ -80,6 +109,10 @@ class NewGameWindow(Gtk.Window):
         self.destroy()
 
     def confirm_overide_save(self, save_name):
+        """
+        This method uses ConfirmOverwriteDialog to ask the user if he is certain
+        that he wants to overide a save
+        """
         confirm_dialog = ConfirmOverwriteDialog(self, save_name)
         response = confirm_dialog.run()
         confirm_dialog.destroy()
@@ -92,19 +125,27 @@ class NewGameWindow(Gtk.Window):
             raise Exception("Can't handle unkown dialog reponse " + response)
 
 class ConfirmOverwriteDialog(Gtk.Dialog):
+    """
+    This window displays a warning to the user when he is about to overwrite a save.
+    """
     def __init__(self, parent, save_name):
         Gtk.Dialog.__init__(self, "Confirm Overwrite", parent, 0, (
             Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OK, Gtk.ResponseType.OK))
         self.set_default_size(150, 100)
 
-        label = Gtk.Label(
-            label="You are about to overwrite the save `{}`.\nAre you sure you want to do that?".format(save_name))
+        text = """You are about to overwrite the save `{}`.
+Are you sure you want to do that?""".format(save_name)
+        label = Gtk.Label(label=text)
 
         box = self.get_content_area()
         box.add(label)
         self.show_all()
 
 class GameWindow(Gtk.Window):
+    """
+    This is the window where the game is played.
+    It has a function for each chapter
+    """
     def __init__(self):
         super().__init__()
         self.set_title("Dragon RPG")
@@ -127,10 +168,39 @@ class GameWindow(Gtk.Window):
 
         self.chapter_1()
 
-    def on_game_closed(self, *args): # *args is ignored but necessary because for some reason, in __init__ the self.connect gives 3 args to on_game_closed, don't know why...
-        Gtk.main_quit()
+    def on_game_closed(self, *args):
+        """
+        This method is called when the game is closed.
+        It is still a work-in-progress
+        """
+        # # WARNING: WORK-IN-progress
+        # *args is ignored but necessary because for some reason, in __init__
+        # the self.connect gives 3 args to on_game_closed, don't know why...
+        Gtk.main_quit() # TODO: add a warning for the user that any unsaved progress will be lost
+        # TODO: add a save_game function
+        # TODO: make the game auto_save a the start of each chapter
 
     def advance_story(self, message, saying_to_self=False, clear=False, tutorial=False):
+        """
+        This function is used to display story elements to the player.
+
+        Usage:
+        advance_story("Some text message") # Will display ` > Some text message.`
+        # notice how by default, it will display the message as a game message.
+
+        advance_story("Some text message", saying_to_self=True)
+        # will display `«Some text message...»`
+        # this is used for internal toughts of the protagonist
+
+        advance_story("Some text message", clear=True) # will display `Some text message`
+        # this is used for unusual messages, without any decoration
+
+        advance_story("Some text message", tutorial=True)
+        # will display `[Tutorial] Some text message.`
+        # this is used for help messages for the player
+
+        TODO: add a way to make the message be said by someone else than the tutorial
+        """
         end_iter = self.story_box_buffer.get_end_iter()
 
         if saying_to_self:
@@ -143,15 +213,21 @@ class GameWindow(Gtk.Window):
             self.story_box_buffer.insert(end_iter, " > " + message + ".\n")
 
     def chapter_1(self):
+        """
+        This function is executed so that the player can play the first chapter.
+        It contains everything, from story to choises.
+        """
         self.advance_story("Chapter 1: The beginning")
         self.advance_story("Well, here I am", True)
 #        sleep(1)
         self.advance_story("\t...", clear=True)
 #        sleep(1)
         self.advance_story("As you may have guessed, you are a Dragon", tutorial=True)
-        self.advance_story("In this world, Dragons are very respected, and are living in the same towns as humans, although not always very peacefully..", tutorial=True)
+        self.advance_story("In this world, Dragons are very respected, and are \
+living in the same towns as humans, although not always very \
+peacefully..", tutorial=True)
 
 if __name__ == "__main__":
-    app = StartScreen()
-    app.show_all()
+    APP = StartScreen()
+    APP.show_all()
     Gtk.main()
