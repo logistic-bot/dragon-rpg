@@ -231,6 +231,7 @@ class GameWindow(Gtk.Window):
         self.advance_story("In this world, Dragons are very respected, and are \
 living in the same towns as humans, although not always very \
 peacefully..", tutorial=True)
+        self.advance_story("But let's start the game, shall we?", tutorial=True, no_dot=True)
 
 if __name__ == "__main__":
     APP = StartScreen()
