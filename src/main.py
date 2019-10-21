@@ -16,6 +16,7 @@ import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk # TODO: find a way so pylint inglores C0413 on this line
 
+
 class StartScreen(Gtk.Window):
     """
     This window is shown when the app starts up.
@@ -48,6 +49,7 @@ class StartScreen(Gtk.Window):
         window = NewGameWindow()
         window.show_all()
         self.destroy()
+
 
 class NewGameWindow(Gtk.Window):
     """
@@ -124,6 +126,7 @@ class NewGameWindow(Gtk.Window):
         else:
             raise Exception("Can't handle unkown dialog reponse " + response)
 
+
 class ConfirmOverwriteDialog(Gtk.Dialog):
     """
     This window displays a warning to the user when he is about to overwrite a save.
@@ -140,6 +143,7 @@ Are you sure you want to do that?""".format(save_name)
         box = self.get_content_area()
         box.add(label)
         self.show_all()
+
 
 class GameWindow(Gtk.Window):
     """
