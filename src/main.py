@@ -237,14 +237,57 @@ class GameWindow(Gtk.Window):
         """
         self.advance_story("Chapter 1: The beginning")
         self.advance_story("Well, here I am", True)
-#        sleep(1)
-        self.advance_story("\t...", clear=True)
-#        sleep(1)
         self.advance_story("As you may have guessed, you are a Dragon", tutorial=True)
         self.advance_story("In this world, Dragons are very respected, and are \
 living in the same towns as humans, although not always very \
 peacefully..", tutorial=True)
         self.advance_story("But let's start the game, shall we?", tutorial=True, no_dot=True)
+
+        self.advance_story("A little girl aproches you, holding a gold coin")
+        self.advance_story("What do you do?", no_dot=True)
+
+        def hide_all():
+            self.wait_button.set_visible(False)
+            self.attack_button.set_visible(False)
+            self.leave_button.set_visible(False)
+
+        def on_wait_clicked(button):
+            # hide_all()
+            self.advance_story("You reached a dead end")
+            self.advance_story("The programmer did not implement what should happend next")
+            self.advance_story("", clear=True)
+
+        def on_attack_clicked(button):
+            # hide_all()
+            self.advance_story("You reached a dead end")
+            self.advance_story("The programmer did not implement what should happen next")
+            self.advance_story("That is probably because he is lazy")
+            self.advance_story("", clear=True)
+
+        def on_leave_clicked(button):
+            # hide_all()
+            self.advance_story("The programmer was lazy and did not programme what should happen next")
+            self.advance_story("Sad..")
+            self.advance_story("", clear=True)
+
+        self.wait_button = Gtk.Button()
+        self.wait_button.set_label("Wait")
+        self.wait_button.set_tooltip_text("Wait for the person to approch before takeing any furether action.")
+        self.wait_button.connect("clicked", on_wait_clicked)
+        self.layout.attach(self.wait_button, 0, 1, 1, 1)
+
+        self.attack_button = Gtk.Button()
+        self.attack_button.set_label("Attack")
+        self.attack_button.set_tooltip_text("Attack the person, will trigger a fight")
+        self.attack_button.connect("clicked", on_attack_clicked)
+        self.layout.attach(self.attack_button, 1, 1, 1, 1)
+
+        self.leave_button = Gtk.Button()
+        self.leave_button.set_label("Leave")
+        self.leave_button.set_tooltip_text("Leave this area without letting the person aproach you")
+        self.leave_button.connect("clicked", on_leave_clicked)
+        self.layout.attach(self.leave_button, 2, 1, 1, 1)
+            
 
 if __name__ == "__main__":
     APP = StartScreen()
