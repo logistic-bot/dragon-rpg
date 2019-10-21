@@ -166,9 +166,18 @@ class GameWindow(Gtk.Window):
         self.layout = Gtk.Grid()
         self.layout.set_row_homogeneous(True)
         self.layout.set_column_homogeneous(True)
-        self.layout.attach(self.story_box, 0, 0, 1, 1)
+        self.layout.set_column_spacing(6)
+        self.layout.set_row_spacing(6)
 
-        self.add(self.layout)
+        self.main_layout = Gtk.Grid()
+        self.main_layout.set_row_homogeneous(True)
+        self.main_layout.set_column_homogeneous(True)
+        self.main_layout.set_row_spacing(6)
+        self.main_layout.set_column_spacing(6)
+        self.main_layout.attach(self.story_box, 0, 0, 1, 1)
+        self.main_layout.attach(self.layout, 0, 1, 1, 1)
+
+        self.add(self.main_layout)
 
         self.chapter_1()
 
