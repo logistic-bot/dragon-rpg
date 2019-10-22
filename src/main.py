@@ -151,9 +151,11 @@ class ConfirmOverwriteDialog(Gtk.Dialog):
         )
         self.set_default_size(150, 100)
 
-        text = """You are about to overwrite the save `{}`.
-Are you sure you want to do that?""".format(
-            save_name
+        text = (
+            "You are about to overwrite the save `{}`."
+            "\nAre you sure you want to do that?".format(
+                save_name
+            )  # thanks to https://stackoverflow.com/questions/10660435/pythonic-way-to-create-a-long-multi-line-string
         )
         label = Gtk.Label(label=text)
 
