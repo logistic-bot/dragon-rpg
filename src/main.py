@@ -15,7 +15,7 @@ import os
 import gi
 
 gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk  # TODO: find a way so pylint inglores C0413 on this line
+from gi.repository import Gtk  # noqa
 
 
 class StartScreen(Gtk.Window):
