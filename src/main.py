@@ -13,8 +13,9 @@ others.
 
 import os
 import gi
+
 gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk # TODO: find a way so pylint inglores C0413 on this line
+from gi.repository import Gtk  # TODO: find a way so pylint inglores C0413 on this line
 
 
 class StartScreen(Gtk.Window):
@@ -25,6 +26,7 @@ class StartScreen(Gtk.Window):
     At the momment, it only contains a "New Game" button, and when clicked
     spawns a "NewGameWindow" Windows
     """
+
     def __init__(self):
         super().__init__()
         self.set_title("Dragon RPG")  # TODO: Find better title
@@ -57,6 +59,7 @@ class NewGameWindow(Gtk.Window):
     It uses ConfirmOverwriteDialog if the user is about to overwrite a save, and
     spawns GameWindow to allow the user to start playing
     """
+
     def __init__(self):
         super().__init__()
         self.set_title("New game")
@@ -66,7 +69,8 @@ class NewGameWindow(Gtk.Window):
         self.name_entry = Gtk.Entry()
         self.name_entry.set_text("Default Save")
         self.name_entry.set_tooltip_text(
-            "Enter here the name under which you want to save this new game")
+            "Enter here the name under which you want to save this new game"
+        )
 
         self.name_entry_label = Gtk.Label()
         self.name_entry_label.set_label("Save name:")
@@ -74,9 +78,9 @@ class NewGameWindow(Gtk.Window):
         self.ok_button = Gtk.Button()
         self.ok_button.set_label("Create new save")
         self.ok_button.set_tooltip_text(
-            "Press to create your save with the above parameters")
-        self.ok_button.connect(
-            "clicked", self.create_new_game, self.name_entry)
+            "Press to create your save with the above parameters"
+        )
+        self.ok_button.connect("clicked", self.create_new_game, self.name_entry)
 
         self.layout = Gtk.Grid()
         self.layout.set_row_spacing(6)
@@ -97,14 +101,14 @@ class NewGameWindow(Gtk.Window):
         save_name = entry.get_text()
         exists = os.path.isfile("./saves/{}.json".format(save_name))
 
-        do_owerwrite = True # By default, there is nothing to owerwrite
+        do_owerwrite = True  # By default, there is nothing to owerwrite
 
         if exists:
             do_owerwrite = self.confirm_overide_save(save_name)
 
         if do_owerwrite:
             with open(os.path.abspath("./saves/{}.json".format(save_name)), "w+"):
-                pass # only create the file
+                pass  # only create the file
 
         window = GameWindow()
         window.show_all()
@@ -120,9 +124,9 @@ class NewGameWindow(Gtk.Window):
         confirm_dialog.destroy()
 
         if response == Gtk.ResponseType.OK:
-            return True # Overwrite
+            return True  # Overwrite
         elif response == Gtk.ResponseType.CANCEL:
-            return False # Do not overwrite
+            return False  # Do not overwrite
         else:
             raise Exception("Can't handle unkown dialog reponse " + response)
 
@@ -131,13 +135,26 @@ class ConfirmOverwriteDialog(Gtk.Dialog):
     """
     This window displays a warning to the user when he is about to overwrite a save.
     """
+
     def __init__(self, parent, save_name):
-        Gtk.Dialog.__init__(self, "Confirm Overwrite", parent, 0, (
-            Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OK, Gtk.ResponseType.OK))
+        Gtk.Dialog.__init__(
+            self,
+            "Confirm Overwrite",
+            parent,
+            0,
+            (
+                Gtk.STOCK_CANCEL,
+                Gtk.ResponseType.CANCEL,
+                Gtk.STOCK_OK,
+                Gtk.ResponseType.OK,
+            ),
+        )
         self.set_default_size(150, 100)
 
         text = """You are about to overwrite the save `{}`.
-Are you sure you want to do that?""".format(save_name)
+Are you sure you want to do that?""".format(
+            save_name
+        )
         label = Gtk.Label(label=text)
 
         box = self.get_content_area()
@@ -150,6 +167,7 @@ class GameWindow(Gtk.Window):
     This is the window where the game is played.
     It has a function for each chapter
     """
+
     def __init__(self):
         super().__init__()
         self.set_title("Dragon RPG")
@@ -189,11 +207,13 @@ class GameWindow(Gtk.Window):
         # # WARNING: WORK-IN-progress
         # *args is ignored but necessary because for some reason, in __init__
         # the self.connect gives 3 args to on_game_closed, don't know why...
-        Gtk.main_quit() # TODO: add a warning for the user that any unsaved progress will be lost
+        Gtk.main_quit()  # TODO: add a warning for the user that any unsaved progress will be lost
         # TODO: add a save_game function
         # TODO: make the game auto_save a the start of each chapter
 
-    def advance_story(self, message, saying_to_self=False, clear=False, tutorial=False, no_dot=False):
+    def advance_story(
+        self, message, saying_to_self=False, clear=False, tutorial=False, no_dot=False
+    ):
         """
         This function is used to display story elements to the player.
         you can use no_dot=True to stop the function to add a leading dot
@@ -226,9 +246,13 @@ class GameWindow(Gtk.Window):
         elif clear:
             self.story_box_buffer.insert(end_iter, "\t\t" + message + "\n")
         elif tutorial:
-            self.story_box_buffer.insert(end_iter, "[Tutorial]\t" + message + end_to_all_messages)
+            self.story_box_buffer.insert(
+                end_iter, "[Tutorial]\t" + message + end_to_all_messages
+            )
         else:
-            self.story_box_buffer.insert(end_iter, " > " + message + end_to_all_messages)
+            self.story_box_buffer.insert(
+                end_iter, " > " + message + end_to_all_messages
+            )
 
     def chapter_1(self):
         """
@@ -238,10 +262,15 @@ class GameWindow(Gtk.Window):
         self.advance_story("Chapter 1: The beginning")
         self.advance_story("Well, here I am", True)
         self.advance_story("As you may have guessed, you are a Dragon", tutorial=True)
-        self.advance_story("In this world, Dragons are very respected, and are \
+        self.advance_story(
+            "In this world, Dragons are very respected, and are \
 living in the same towns as humans, although not always very \
-peacefully..", tutorial=True)
-        self.advance_story("But let's start the game, shall we?", tutorial=True, no_dot=True)
+peacefully..",
+            tutorial=True,
+        )
+        self.advance_story(
+            "But let's start the game, shall we?", tutorial=True, no_dot=True
+        )
 
         self.advance_story("A little girl aproches you, holding a gold coin")
         self.advance_story("What do you do?", no_dot=True)
@@ -252,27 +281,31 @@ peacefully..", tutorial=True)
             self.leave_button.set_visible(False)
 
         def on_wait_clicked(button):
-            # hide_all()
-            self.advance_story("You reached a dead end")
-            self.advance_story("The programmer did not implement what should happend next")
-            self.advance_story("", clear=True)
+            hide_all()
+            self.advance_story("You wait for the girl to apro")
 
         def on_attack_clicked(button):
             # hide_all()
             self.advance_story("You reached a dead end")
-            self.advance_story("The programmer did not implement what should happen next")
+            self.advance_story(
+                "The programmer did not implement what should happen next"
+            )
             self.advance_story("That is probably because he is lazy")
             self.advance_story("", clear=True)
 
         def on_leave_clicked(button):
             # hide_all()
-            self.advance_story("The programmer was lazy and did not programme what should happen next")
+            self.advance_story(
+                "The programmer was lazy and did not programme what should happen next"
+            )
             self.advance_story("Sad..")
             self.advance_story("", clear=True)
 
         self.wait_button = Gtk.Button()
         self.wait_button.set_label("Wait")
-        self.wait_button.set_tooltip_text("Wait for the person to approch before takeing any furether action.")
+        self.wait_button.set_tooltip_text(
+            "Wait for the person to approch before takeing any furether action."
+        )
         self.wait_button.connect("clicked", on_wait_clicked)
         self.layout.attach(self.wait_button, 0, 1, 1, 1)
 
@@ -284,10 +317,12 @@ peacefully..", tutorial=True)
 
         self.leave_button = Gtk.Button()
         self.leave_button.set_label("Leave")
-        self.leave_button.set_tooltip_text("Leave this area without letting the person aproach you")
+        self.leave_button.set_tooltip_text(
+            "Leave this area without letting the person aproach you"
+        )
         self.leave_button.connect("clicked", on_leave_clicked)
         self.layout.attach(self.leave_button, 2, 1, 1, 1)
-            
+
 
 if __name__ == "__main__":
     APP = StartScreen()
